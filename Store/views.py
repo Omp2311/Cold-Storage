@@ -1,6 +1,6 @@
 from django.shortcuts import render , redirect
 from django.contrib import messages
-from .models import Company,client,Gate,Storage,Block_Setting,Admin,ColdStoreEntry,store,Custom ,Package, Item
+from .models import Company,client,Gate,Storage,Block_Setting,ColdStoreEntry,store,Custom ,Package, Item,UserPermission
 from django.utils.dateparse import parse_date
 from django.views.generic import CreateView
 from .models import Custom
@@ -112,19 +112,42 @@ def Register(request):
     return render(request, 'company_register.html', {'registers':registers ,'packages': packages})
 
 @login_required(login_url='Login')
+
 def Staff(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-        password = request.POST["password"]
-        role = request.POST["role"]
+    if request.method == 'POST':
+        Custom = get_user_model()
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        role = request.POST.get('role')
+        permissions = request.POST.getlist('permissions')  
 
-        user = Custom.objects.create_user(username=username, email=email, password=password, role=role)
-        user.save()
-        messages.success(request, f"User {username} registered successfully as {role}!")
-        return redirect("Staff")
+        # Check if the username already exists
+        if Custom.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists. Please choose a different username.')
+            return redirect('Staff')  # Redirect back to the form
 
-    return render(request, "Staff.html")
+        # Create the user using the custom user model
+        try:
+            user = Custom.objects.create_user(username=username, email=email, password=password, role=role)
+
+            # Assign role (if using groups)
+            from django.contrib.auth.models import Group
+            group, created = Group.objects.get_or_create(name=role)
+            user.groups.add(group)
+
+            # Save permissions
+            for perm in permissions:
+                UserPermission.objects.create(user=user, permission=perm)
+
+            messages.success(request, 'User created successfully!')
+            return redirect('Staff')  # Redirect to a success page
+
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            return redirect('Staff')
+
+    return render(request, 'Staff.html')
 
 
 @login_required(login_url='Login')

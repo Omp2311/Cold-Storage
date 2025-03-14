@@ -34,6 +34,13 @@ class Custom(AbstractUser):
     
     def is_gate_manager(self):
         return self.role == self.Role.GATE_MANAGER
+    
+class UserPermission(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    permission = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.permission}"   
 
 class Company(models.Model):
     company_name = models.TextField(null=False, blank=False,unique=True)

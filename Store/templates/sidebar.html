@@ -1,138 +1,134 @@
-{% load static %}
-<!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-
-  <div class="d-flex align-items-center justify-content-between">
-    <a href="index.html" class="logo d-flex align-items-center">
-      <img src="{% static 'assets/img/logo.png' %}" alt="">
-      <span class="d-none d-lg-block">MKV CMS</span>
-    </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
-  </div><!-- End Logo -->
+<!-- sidebar.html -->
 <aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="dashboard">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li>
-  
-      <!-- Companies (Visible to Admin only) -->
-      {% if user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Register">
-          <i class="bi bi-building"></i>
-          <span>Companies</span>
-        </a>
-      </li>
-      {% endif %}
-  
-      <!-- Clients (Visible to Admin and Gate Manager) -->
-      {% if user.role == 'ADMIN' or user.role == 'GATE_MANAGER' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Client">
-          <i class="bi bi-people"></i>
-          <span>Clients</span>
-        </a>
-      </li>
-      {% endif %}
-      {% if user.role == 'ADMIN' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Chamber">
-          <i class="bi bi-gear"></i>
-          <span>Chamber</span>
-        </a>
-      </li>
-      {% endif %}
-  
-      <!-- Add Store (Visible to Admin only) -->
-      {% if user.role == 'ADMIN' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Store">
-          <i class="bi bi-shop"></i>
-          <span>Add Store</span>
-        </a>
-      </li>
-      {% endif %}
-  
-      <!-- Staff (Visible to Admin only) -->
-      {% if user.role == 'ADMIN' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Staff">
-          <i class="bi bi-person-lines-fill"></i>
-          <span>Add Staff</span>
-        </a>
-      </li>
-      {% endif %}
-  
-      <!-- Inventory Gate (Visible to Gate Manager only) -->
-      {% if user.role == 'GATE_MANAGER' or user.role == 'ADMIN' or user.role == 'MANAGER' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Inventory_Gate">
-          <i class="bi bi-door-open"></i>
-          <span>Inventory Gate</span>
-        </a>
-      </li>
-      {% endif %}
-  
-      <!-- Receipt (Visible to Gate Manager only) -->
-      {% if user.role == 'GATE_MANAGER' or user.role == 'MANAGER' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Recipt">
-          <i class="bi bi-receipt"></i>
-          <span>Receipt</span>
-        </a>
-      </li>
-      {% endif %}
-  
-    <!-- Income (Visible to Admin only) -->
-      {% if user.role == 'ADMIN' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Income">
-          <i class="bi bi-gear"></i>
-          <span>Income</span>
-        </a>
-      </li>
-      {% endif %}
-    <!-- Reports (Visible to Admin only) -->
-      {% if user.role == 'ADMIN' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Reports">
-          <i class="bi bi-gear"></i>
-          <span>Report</span>
-        </a>
-      </li>
-      {% endif %}
-      <!-- Expences (Visible to Admin only) -->
-      {% if user.role == 'ADMIN' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Expence">
-          <i class="bi bi-gear"></i>
-          <span>Expence</span>
-        </a>
-      </li>
-      {% endif %}
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <!-- Dashboard -->
+    {% if 'VIEW_DASHBOARD' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    {% endif %}
 
-      <!-- Setting (Visible to Admin only) -->
-      {% if user.role == 'ADMIN' or user.role == 'SUPER_ADMIN' %}
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="Admin_Setting">
-          <i class="bi bi-gear"></i>
-          <span>Admin_Setting</span>
-        </a>
-      </li>
-      {% endif %}
- 
-  <!-- Inventory (Visible to Admin and Manager) -->
-  {% if user.role == 'ADMIN' or user.role == 'MANAGER'  or user.role == 'SUPER_ADMIN' %}
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="Inventory">
-      <i class="bi bi-gear"></i>
-      <span>Inventory</span>
-    </a>
-  </li>
-  {% endif %}
+    <!-- Companies -->
+    {% if 'MANAGE_COMPANIES' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Register">
+        <i class="bi bi-building"></i>
+        <span>Companies</span>
+      </a>
+    </li>
+    {% endif %}
 
-</ul>
+    <!-- Clients -->
+    {% if 'MANAGE_CLIENTS' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Client">
+        <i class="bi bi-people"></i>
+        <span>Clients</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Chamber -->
+    {% if 'MANAGE_CHAMBER' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Chamber">
+        <i class="bi bi-gear"></i>
+        <span>Chamber</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Add Store -->
+    {% if 'MANAGE_STORE' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Store">
+        <i class="bi bi-shop"></i>
+        <span>Add Store</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Add Staff -->
+    {% if 'MANAGE_STAFF' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Staff">
+        <i class="bi bi-person-lines-fill"></i>
+        <span>Add Staff</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Inventory Gate -->
+    {% if 'MANAGE_INVENTORY_GATE' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Inventory_Gate">
+        <i class="bi bi-door-open"></i>
+        <span>Inventory Gate</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Receipt -->
+    {% if 'MANAGE_RECEIPT' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Recipt">
+        <i class="bi bi-receipt"></i>
+        <span>Receipt</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Income -->
+    {% if 'MANAGE_INCOME' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Income">
+        <i class="bi bi-gear"></i>
+        <span>Income</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Reports -->
+    {% if 'MANAGE_REPORTS' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Reports">
+        <i class="bi bi-gear"></i>
+        <span>Report</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Expenses -->
+    {% if 'MANAGE_EXPENSES' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Expence">
+        <i class="bi bi-gear"></i>
+        <span>Expence</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Settings -->
+    {% if 'MANAGE_SETTINGS' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Admin_Setting">
+        <i class="bi bi-gear"></i>
+        <span>Admin_Setting</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Inventory -->
+    {% if 'MANAGE_INVENTORY' in user_permissions %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="Inventory">
+        <i class="bi bi-gear"></i>
+        <span>Inventory</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
 </aside>
